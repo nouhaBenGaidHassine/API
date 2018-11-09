@@ -9,7 +9,10 @@ import org.springframework.stereotype.Component;
 public class Justifier {
 	private int width = 80;
 
-	public String justify(String[] words) {
+	public String justify(String text) {
+		text = prepare(text);
+		// text = text.replaceAll(System.getProperty("line.separator"), "");
+		String[] words = text.split(" ");
 		StringBuilder fullParagraph = new StringBuilder();
 		int index = 0;
 		while (index < words.length) {
@@ -18,7 +21,11 @@ public class Justifier {
 			int added = 0;
 			for (String word : wordsToAdd) {
 				fullParagraph.append(word);
+				index++;
 				added++;
+				if (word.endsWith(System.getProperty("line.separator"))) {
+					break;
+				}
 				int left = wordsToAdd.size() - added;
 				if (left != 0) {
 					int x = (int) Math.floor(spaceSize / left) + 1;
@@ -29,10 +36,22 @@ public class Justifier {
 					}
 				}
 			}
-			fullParagraph.append("\r\n");
-			index += wordsToAdd.size();
+			if (!fullParagraph.toString().endsWith(System.getProperty("line.separator"))) {
+				fullParagraph.append(System.getProperty("line.separator"));
+			}
+
 		}
 		return fullParagraph.toString();
+	}
+
+	private String prepare(String text) {
+		text = text.trim();
+		text = text.replaceAll("\t", " ");
+		text = text.replaceAll("[ ]+" + System.getProperty("line.separator"), System.getProperty("line.separator"));
+		text = text.replaceAll("[" + System.getProperty("line.separator") + "]+", System.getProperty("line.separator"));
+		text = text.replaceAll(System.getProperty("line.separator"), System.getProperty("line.separator") + " ");
+		text = text.replaceAll("[ ]+", " ");
+		return text;
 	}
 
 	private List<String> getWordsToAdd(String[] words, int start) {

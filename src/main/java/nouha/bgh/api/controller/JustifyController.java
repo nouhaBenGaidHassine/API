@@ -21,6 +21,6 @@ public class JustifyController {
 	@ResponseBody
 	String justifyText(@RequestBody String text, HttpServletResponse response) {
 		response.setContentType("text/plain");
-		return justifier.justify(text.trim().split(" "));
+		return justifier.justify(text);
 	}
 }
