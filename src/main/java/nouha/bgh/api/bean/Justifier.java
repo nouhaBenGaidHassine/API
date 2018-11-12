@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Justifier {
 
-	public static final int max_words = 1000;
+	public static final int max_words = 80000;
 
 	public static final int width = 80;
 
@@ -17,7 +17,6 @@ public class Justifier {
 
 	public String justify(String text) {
 		text = prepare(text);
-		// text = text.replaceAll(System.getProperty("line.separator"), "");
 		String[] words = text.split(" ");
 		StringBuilder fullParagraph = new StringBuilder();
 		int index = 0;

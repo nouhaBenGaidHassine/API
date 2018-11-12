@@ -28,14 +28,12 @@ public class JustifyController {
 	String justifyText(@RequestBody String text, HttpServletResponse response) {
 		String user = SecurityContextHolder.getContext().getAuthentication().getName();
 		justifier.setNumberOfWords(tokens.getWordsCount(user));
-		System.out.println("words = " + justifier.getNumberOfWords());
 		String output = justifier.justify(text);
 		if (justifier.getNumberOfWords() > Justifier.max_words) {
 			response.setStatus(HttpStatus.PAYMENT_REQUIRED.value());
 		} else {
 			response.setContentType("text/plain");
 		}
-		System.out.println("words = " + justifier.getNumberOfWords());
 		tokens.setWordsCount(user, justifier.getNumberOfWords());
 		return output;
 	}

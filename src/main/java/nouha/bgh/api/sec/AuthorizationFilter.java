@@ -22,7 +22,6 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 
 		String token = request.getHeader(SecurityConstants.HEADER_STRING);
-		System.out.println(token);
 		if (token == null || !token.startsWith(SecurityConstants.TOKEN_PREFIX)) {
 			filterChain.doFilter(request, response);
 			return;

@@ -18,17 +18,29 @@ public class Tokens {
 	private HashMap<String, Integer> words_count = new HashMap<String, Integer>();
 
 	public String getTokenFor(String user) {
+
 		if (tokens.containsKey(user)) {
-			return tokens.get(user);
+			Date date = Jwts.parser().setSigningKey(SecurityConstants.SECRET)
+					.parseClaimsJws(tokens.get(user).replace(SecurityConstants.TOKEN_PREFIX, "")).getBody()
+					.getExpiration();
+			Date now = new Date();
+			if (now.after(date)) {
+				createToken(user);
+			}
+
 		} else {
-			ZonedDateTime expirationTimeUTC = ZonedDateTime.now(ZoneOffset.UTC).plus(SecurityConstants.EXPIRATION_TIME,
-					ChronoUnit.MILLIS);
-			String token = Jwts.builder().setSubject(user).setExpiration(Date.from(expirationTimeUTC.toInstant()))
-					.signWith(SignatureAlgorithm.HS256, SecurityConstants.SECRET).compact();
-			tokens.put(user, token);
-			words_count.put(user, 0);
-			return token;
+			createToken(user);
 		}
+		return tokens.get(user);
+	}
+
+	private void createToken(String user) {
+		ZonedDateTime expirationTimeUTC = ZonedDateTime.now(ZoneOffset.UTC).plus(SecurityConstants.EXPIRATION_TIME,
+				ChronoUnit.MILLIS);
+		String token = Jwts.builder().setSubject(user).setExpiration(Date.from(expirationTimeUTC.toInstant()))
+				.signWith(SignatureAlgorithm.HS256, SecurityConstants.SECRET).compact();
+		tokens.put(user, token);
+		words_count.put(user, 0);
 	}
 
 	public int getWordsCount(String user) {
