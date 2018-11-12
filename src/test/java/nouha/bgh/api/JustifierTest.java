@@ -18,7 +18,7 @@ public class JustifierTest {
 
 		String[] lines = output.split(System.getProperty("line.separator"));
 		for (String line : lines) {
-			assertTrue(line.length() <= justifier.getWidth());
+			assertTrue(line.length() <= Justifier.width);
 		}
 	}
 }

@@ -3,11 +3,17 @@ package nouha.bgh.api.bean;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Justifier {
-	private int width = 80;
+
+	public static final int max_words = 1000;
+
+	public static final int width = 80;
+
+	private int numberOfWords = 0;
 
 	public String justify(String text) {
 		text = prepare(text);
@@ -20,7 +26,10 @@ public class Justifier {
 			int spaceSize = getSpaceSize(wordsToAdd);
 			int added = 0;
 			for (String word : wordsToAdd) {
-				fullParagraph.append(word);
+				if (numberOfWords <= max_words) {
+					fullParagraph.append(word);
+					numberOfWords++;
+				}
 				index++;
 				added++;
 				if (word.endsWith(System.getProperty("line.separator"))) {
@@ -71,11 +80,12 @@ public class Justifier {
 		return width - (size - 1); // we minus 1 of the last space
 	}
 
-	public int getWidth() {
-		return width;
+	public int getNumberOfWords() {
+		return numberOfWords;
 	}
 
-	public void setWidth(int width) {
-		this.width = width;
+	public void setNumberOfWords(int numberOfWords) {
+		this.numberOfWords = numberOfWords;
 	}
+
 }
